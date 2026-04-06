@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bryan David — Fullstack Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #1a1a1a;
+    --surface: #1e1e1e;
+    --border: rgba(255,255,255,0.08);
+    --text: #f0ede8;
+    --muted: #888;
+    --accent: #c8f04d;
+    --accent2: #4df0c8;
+    --accent3: #f04d7a;
+    --mono: 'DM Mono', monospace;
+    --serif: 'DM Serif Display', serif;
+    --sans: 'Syne', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 3rem;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 8rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+    gap: 4rem;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,240,77,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 32px; height: 1px;
+    background: var(--accent);
+  }
+  .hero-name {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 7vw, 6rem);
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+  }
+  .hero-name em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-desc {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 480px;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0a0a;
+    font-weight: 500;
+  }
+  .btn-primary:hover { background: #d6ff5a; transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover { border-color: rgba(255,255,255,0.3); background: var(--surface); }
+
+  /* Hero visual side */
+  .hero-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+  }
+  .code-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 400px;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.9;
+  }
+  .code-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+  .code-file { color: var(--muted); margin-left: auto; font-size: 11px; }
+  .kw { color: var(--accent2); }
+  .fn { color: var(--accent); }
+  .str { color: #e5a05e; }
+  .cm { color: #555; }
+  .indent { margin-left: 1rem; }
+  .indent2 { margin-left: 2rem; }
+
+  .stat-row {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    max-width: 400px;
+  }
+  .stat-box {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 2rem;
+    color: var(--accent);
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* SECTIONS */
+  section { padding: 6rem 3rem; }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 24px; height: 1px;
+    background: var(--accent);
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15;
+    margin-bottom: 3rem;
+    max-width: 600px;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+  .about-text p {
+    color: var(--muted);
+    line-height: 1.9;
+    margin-bottom: 1.25rem;
+    font-size: 15px;
+  }
+  .about-text p strong { color: var(--text); font-weight: 600; }
+  .location-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+  .location-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .contact-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .contact-list a {
+    color: var(--muted);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.2s;
+  }
+  .contact-list a:hover { color: var(--accent); }
+  .contact-icon { color: var(--accent); font-size: 14px; width: 20px; text-align: center; }
+
+  /* SKILLS */
+  .skills-bg { background: var(--bg2); }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .skill-category {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+  .skill-category:hover { border-color: rgba(200,240,77,0.3); }
+  .skill-cat-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 1rem;
+  }
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .tag:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+  .tag.accent { color: var(--accent); border-color: rgba(200,240,77,0.2); }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: default;
+  }
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .project-card:hover::before { transform: scaleX(1); }
+  .project-card:hover { border-color: rgba(200,240,77,0.2); transform: translateY(-4px); }
+  .project-number {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+  .project-title {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+  }
+  .project-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+  .project-techs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  /* EDUCATION */
+  .edu-bg { background: var(--bg2); }
+  .edu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+  .edu-list::before {
+    content: '';
+    position: absolute;
+    left: 7px; top: 8px; bottom: 8px;
+    width: 1px;
+    background: var(--border);
+  }
+  .edu-item {
+    padding-left: 2.5rem;
+    padding-bottom: 2.5rem;
+    position: relative;
+  }
+  .edu-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px;
+    width: 15px; height: 15px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--bg2);
+  }
+  .edu-period {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+  }
+  .edu-degree {
+    font-family: var(--sans);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+  .edu-school {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 3rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg);
+  }
+  .footer-name {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    color: var(--text);
+  }
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .footer-social {
+    display: flex;
+    gap: 1.5rem;
+  }
+  .footer-social a {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: color 0.2s;
+  }
+  .footer-social a:hover { color: var(--accent); }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+  }
+
+  /* SOFT SKILLS */
+  .soft-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .soft-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .soft-icon { color: var(--accent); font-size: 18px; margin-top: 2px; }
+  .soft-text { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.5rem; }
+    .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 4rem; gap: 3rem; }
+    .hero-visual { align-items: stretch; }
+    section { padding: 4rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+    .footer-social { flex-wrap: wrap; justify-content: center; }
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-tag { animation: fadeUp 0.6s 0.1s both; }
+  .hero-name { animation: fadeUp 0.6s 0.25s both; }
+  .hero-desc { animation: fadeUp 0.6s 0.4s both; }
+  .hero-cta { animation: fadeUp 0.6s 0.55s both; }
+  .hero-visual { animation: fadeUp 0.6s 0.4s both; }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background: var(--accent);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: blink 1s infinite;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">bd.dev</div>
+  <ul class="nav-links">
+    <li><a href="#sobre">sobre</a></li>
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#projetos">projetos</a></li>
+    <li><a href="#formacao">formação</a></li>
+    <li><a href="mailto:contatobryan7n@gmail.com">contato</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Fullstack Developer</div>
+    <h1 class="hero-name">Bryan<br><em>David</em></h1>
+    <p class="hero-desc">
+      Desenvolvedor Fullstack em formação, com foco em C#, Java e JavaScript. 
+      Apaixonado por construir aplicações que resolvem problemas reais — 
+      do backend ao front, do código à automação.
+    </p>
+    <div class="hero-cta">
+      <a href="mailto:contatobryan7n@gmail.com" class="btn btn-primary">Entrar em contato ↗</a>
+      <a href="https://www.linkedin.com/in/bryan-david-vieira-batista-dev/" target="_blank" class="btn btn-outline">LinkedIn</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="code-card">
+      <div class="code-header">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <span class="code-file">bryan.dev.js</span>
+      </div>
+      <div>
+        <span class="kw">const</span> <span class="fn">developer</span> = {<br>
+        <span class="indent">name: <span class="str">"Bryan David"</span>,</span><br>
+        <span class="indent">role: <span class="str">"Fullstack Dev"</span>,</span><br>
+        <span class="indent">location: <span class="str">"Nova Lima, MG"</span>,</span><br>
+        <span class="indent">stack: [</span><br>
+        <span class="indent2"><span class="str">"C#"</span>, <span class="str">"Java"</span>, <span class="str">"JS"</span>,</span><br>
+        <span class="indent2"><span class="str">"React"</span>, <span class="str">"Node.js"</span></span><br>
+        <span class="indent">],</span><br>
+        <span class="indent">openToWork: <span class="kw">true</span></span><br>
+        };<br><br>
+        <span class="cm">// always learning, always building</span>
+        <span class="cursor"></span>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-box">
+        <span class="stat-num">4+</span>
+        <span class="stat-label">Linguagens</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">3+</span>
+        <span class="stat-label">Projetos</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">2</span>
+        <span class="stat-label">Idiomas</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="section-label">sobre mim</div>
+  <h2 class="section-title">Quem é Bryan David?</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <div class="location-pill">
+        <span class="location-dot"></span>
+        Nova Lima, Minas Gerais — BR
+      </div>
+      <p>
+        Sou um desenvolvedor Fullstack em formação, apaixonado por tecnologia e resolução de problemas criativos. 
+        Tenho <strong>forte base em C# e Java</strong>, além de experiência prática com JavaScript, React, Node.js, Python e MySQL.
+      </p>
+      <p>
+        Atualmente cursando <strong>Técnico em Mecatrônica e Desenvolvimento de Sistemas</strong> no SENAI CFP Afonso Greco, 
+        em Nova Lima. Meu perfil mistura o mundo da programação com automação industrial — o que me dá uma visão 
+        diferenciada para projetos interdisciplinares.
+      </p>
+      <p>
+        Sou <strong>comunicativo, proativo e aprendo rápido</strong>. Gosto de trabalhar em equipe, 
+        contribuir com ideias criativas e entregar valor real nos projetos que faço parte.
+      </p>
+      <div class="soft-grid">
+        <div class="soft-item">
+          <span class="soft-icon">⚡</span>
+          <span class="soft-text">Proatividade e iniciativa</span>
+        </div>
+        <div class="soft-item">
+          <span class="soft-icon">🤝</span>
+          <span class="soft-text">Trabalho em equipe</span>
+        </div>
+        <div class="soft-item">
+          <span class="soft-icon">🧠</span>
+          <span class="soft-text">Aprendizado rápido</span>
+        </div>
+        <div class="soft-item">
+          <span class="soft-icon">💡</span>
+          <span class="soft-text">Criatividade na resolução de problemas</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label" style="margin-bottom: 1.5rem;">contato direto</div>
+      <ul class="contact-list">
+        <li>
+          <a href="tel:+5531995429448">
+            <span class="contact-icon">☎</span>
+            (31) 99542-9448
+          </a>
+        </li>
+        <li>
+          <a href="mailto:contatobryan7n@gmail.com">
+            <span class="contact-icon">✉</span>
+            contatobryan7n@gmail.com
+          </a>
+        </li>
+        <li>
+          <a href="https://www.linkedin.com/in/bryan-david-vieira-batista-dev/" target="_blank">
+            <span class="contact-icon">in</span>
+            Bryan David Vieira Batista
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/BryanDavid3" target="_blank">
+            <span class="contact-icon">&lt;/&gt;</span>
+            BryanDavid3
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <span class="contact-icon">📍</span>
+            Rua José de Alencar, 281 — Nova Lima
+          </a>
+        </li>
+      </ul>
+
+      <div style="margin-top: 2.5rem;">
+        <div class="section-label" style="margin-bottom: 1rem;">idiomas</div>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-family: var(--mono); font-size: 12px; color: var(--text);">Inglês</span>
+              <span style="font-family: var(--mono); font-size: 11px; color: var(--muted);">Intermediário</span>
+            </div>
+            <div style="height: 3px; background: var(--border); border-radius: 2px;">
+              <div style="width: 55%; height: 100%; background: var(--accent); border-radius: 2px;"></div>
+            </div>
+            <div style="font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 4px;">leitura técnica e conversação básica</div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-family: var(--mono); font-size: 12px; color: var(--text);">Espanhol</span>
+              <span style="font-family: var(--mono); font-size: 11px; color: var(--muted);">Iniciante</span>
+            </div>
+            <div style="height: 3px; background: var(--border); border-radius: 2px;">
+              <div style="width: 20%; height: 100%; background: var(--accent2); border-radius: 2px;"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span style="font-family: var(--mono); font-size: 12px; color: var(--text);">Português</span>
+              <span style="font-family: var(--mono); font-size: 11px; color: var(--muted);">Nativo</span>
+            </div>
+            <div style="height: 3px; background: var(--border); border-radius: 2px;">
+              <div style="width: 100%; height: 100%; background: var(--accent); border-radius: 2px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SKILLS -->
+<section id="skills" class="skills-bg">
+  <div class="section-label">hard skills</div>
+  <h2 class="section-title">Stack técnica</h2>
+  <div class="skills-grid">
+    <div class="skill-category">
+      <div class="skill-cat-label">linguagens</div>
+      <div class="skill-tags">
+        <span class="tag accent">C#</span>
+        <span class="tag accent">Java</span>
+        <span class="tag accent">JavaScript</span>
+        <span class="tag">Python</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-label">front-end</div>
+      <div class="skill-tags">
+        <span class="tag accent">React</span>
+        <span class="tag">HTML</span>
+        <span class="tag">CSS</span>
+        <span class="tag">Flutter</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-label">back-end</div>
+      <div class="skill-tags">
+        <span class="tag accent">Node.js</span>
+        <span class="tag">Express</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-label">banco de dados</div>
+      <div class="skill-tags">
+        <span class="tag accent">MySQL</span>
+        <span class="tag">Firestore</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-label">ferramentas</div>
+      <div class="skill-tags">
+        <span class="tag accent">Git</span>
+        <span class="tag">GitHub</span>
+        <span class="tag">Linux</span>
+        <span class="tag">Docker</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-label">automação</div>
+      <div class="skill-tags">
+        <span class="tag accent">Arduino</span>
+        <span class="tag">Ladder Logic</span>
+        <span class="tag">APIs</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PROJETOS -->
+<section id="projetos">
+  <div class="section-label">experiência</div>
+  <h2 class="section-title">Projetos & trabalhos</h2>
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <div class="project-number">01 / Projeto</div>
+      <h3 class="project-title">Optistock</h3>
+      <p class="project-desc">
+        Aplicação de gerenciamento de estoque desenvolvida do zero. 
+        Sistema completo com interface React, API Node.js e banco MySQL — 
+        pensado para facilitar o controle de inventário de forma visual e eficiente.
+      </p>
+      <div class="project-techs">
+        <span class="tag accent">React</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">MySQL</span>
+        <span class="tag">Express</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-number">02 / Projeto</div>
+      <h3 class="project-title">Sites responsivos</h3>
+      <p class="project-desc">
+        Desenvolvimento de websites responsivos com integração a APIs externas. 
+        Foco em experiência do usuário, performance e boas práticas de semântica e acessibilidade.
+      </p>
+      <div class="project-techs">
+        <span class="tag accent">HTML</span>
+        <span class="tag accent">CSS</span>
+        <span class="tag accent">JavaScript</span>
+        <span class="tag">APIs externas</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-number">03 / Projeto</div>
+      <h3 class="project-title">Automação industrial</h3>
+      <p class="project-desc">
+        Automação de projetos interdisciplinares usando lógica ladder e softwares para automatizar 
+        plantas industriais, armazéns, reservatórios e edifícios inteligentes.
+      </p>
+      <div class="project-techs">
+        <span class="tag accent">Ladder Logic</span>
+        <span class="tag">Arduino</span>
+        <span class="tag">Python</span>
+        <span class="tag">Robótica</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-number">04 / Projeto</div>
+      <h3 class="project-title">Automação com Python & Arduino</h3>
+      <p class="project-desc">
+        Scripts de automação de tarefas para projetos acadêmicos, combinando Python para controle 
+        lógico e Arduino para interação com sensores e atuadores físicos.
+      </p>
+      <div class="project-techs">
+        <span class="tag accent">Python</span>
+        <span class="tag accent">Arduino</span>
+        <span class="tag">Eletrônica</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- FORMAÇÃO -->
+<section id="formacao" class="edu-bg">
+  <div class="section-label">formação</div>
+  <h2 class="section-title">Educação & cursos</h2>
+  <div class="edu-list">
+    <div class="edu-item">
+      <div class="edu-period">2025 — 2027</div>
+      <div class="edu-degree">Técnico em Mecatrônica e Desenvolvimento de Sistemas</div>
+      <div class="edu-school">SENAI CFP Afonso Greco — Nova Lima, MG</div>
+    </div>
+    <div class="edu-item">
+      <div class="edu-period">2024 — 2025</div>
+      <div class="edu-degree">Qualificação em Robótica, Automação Industrial e Lógica de Programação</div>
+      <div class="edu-school">SENAI CFP Afonso Greco — Nova Lima, MG</div>
+    </div>
+    <div class="edu-item">
+      <div class="edu-period">2019 — 2026</div>
+      <div class="edu-degree">Ensino Médio</div>
+      <div class="edu-school">Escola Estadual João Felipe da Rocha — Nova Lima, MG</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-name">Bryan David</div>
+  <div class="footer-social">
+    <a href="mailto:contatobryan7n@gmail.com">Email</a>
+    <a href="https://www.linkedin.com/in/bryan-david-vieira-batista-dev/" target="_blank">LinkedIn</a>
+    <a href="https://github.com/BryanDavid3" target="_blank">GitHub</a>
+  </div>
+  <div class="footer-copy">© 2025 Bryan David</div>
+</footer>
+
+</body>
+</html>
